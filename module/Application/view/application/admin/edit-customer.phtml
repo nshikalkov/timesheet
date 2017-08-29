@@ -1,0 +1,9 @@
+<h1>Edit customer</h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('admin', ['action' => 'edit-customer', 'id' => $this->id]));
+echo $this->partial('application/admin/formcustomer', [
+    'form' => $form,
+    'submitLabel' => 'Update customer',
+]);

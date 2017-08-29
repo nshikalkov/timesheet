@@ -1,0 +1,30 @@
+<?php
+$form = $this->form;
+
+$fieldset = $form->get('customer');
+
+$name = $fieldset->get('name');
+$name->setAttribute('class', 'form-control');
+$name->setAttribute('placeholder', 'Name');
+
+$submit = $form->get('submit');
+$submit->setValue($this->submitLabel);
+$submit->setAttribute('class', 'btn btn-primary');
+
+$form->prepare();
+
+echo $this->form()->openTag($form);
+?>
+
+<fieldset>
+<div class="form-group">
+    <?= $this->formLabel($name) ?>
+    <?= $this->formElement($name) ?>
+    <?= $this->formElementErrors()->render($name, ['class' => 'help-block']) ?>
+</div>
+</fieldset>
+
+<?php
+echo $this->formSubmit($submit);
+echo $this->formHidden($fieldset->get('id'));
+echo $this->form()->closeTag();

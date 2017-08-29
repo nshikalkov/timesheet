@@ -1,0 +1,15 @@
+<h1>Customers</h1>
+<a href="<?=$this->url('admin', ['action' => 'add-customer'])?>" class="btn btn-primary">Add new customer</a>
+<br><br>
+<table  width="100%">
+<tr style="border-bottom: 1px solid grey;"><th width="50%">Customer</th><th width="50%">Actions</th></tr>
+<?php foreach ($this->customers as $customer): ?>
+<tr style="border-bottom: 1px solid grey;"><td><?= $customer->getName() ?></td>
+<td>
+<a href="<?=$this->url('admin', ['action' => 'edit-customer', 'id' => $customer->getId()])?>" class="btn btn-primary btn-margin3">Edit</a>
+<a href="<?=$this->url('admin', ['action' => 'list-projects', 'id' => $customer->getId()])?>" class="btn btn-primary btn-margin3">Projects</a>
+<a href="<?=$this->url('admin', ['action' => 'delete-customer', 'id' => $customer->getId()])?>" class="btn btn-danger btn-margin3">Delete</a>
+</td>
+</tr>
+<?php endforeach ?>
+</table>

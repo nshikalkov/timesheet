@@ -1,0 +1,14 @@
+<h1>Projects for <strong><?=$this->customerName?></strong></h1>
+<a href="<?=$this->url('admin', ['action' => 'add-project', 'id' => $this->customerId])?>" class="btn btn-primary">Add new project</a>
+<br><br>
+<table  width="100%">
+<tr style="border-bottom: 1px solid grey;"><th width="50%">Project</th><th width="50%">Actions</th></tr>
+<?php foreach ($this->projects as $project): ?>
+<tr style="border-bottom: 1px solid grey;"><td><?= $project->getName() ?></td>
+<td>
+<a href="<?=$this->url('admin', ['action' => 'edit-project', 'id' => $project->getId()])?>" class="btn btn-primary btn-margin3">Edit</a>
+<a href="<?=$this->url('admin', ['action' => 'delete-project', 'id' => $project->getId()])?>" class="btn btn-danger btn-margin3">Delete</a>
+</td>
+</tr>
+<?php endforeach ?>
+</table>

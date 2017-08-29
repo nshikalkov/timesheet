@@ -1,0 +1,19 @@
+<h1>Log In</h1>
+
+<form method="POST" name="loginform"
+	action="<?=$this->url('auth', [])?>" id="loginform">
+	<div class="form-group">
+		<label for="email">E-mail</label> <input type="text" name="email"
+			class="form-control" placeholder="E-mail" value="">
+	</div>
+	<div class="form-group">
+		<label for="password">Password</label> <input type="password" name="password"
+			class="form-control" value="">
+	</div>
+	<input type="checkbox" name="remember_me" checked="checked" /> Remember me<br>
+<br>
+	<input type="submit" name="submit" class="btn btn-success btn-lg"
+		value="Log In">
+		<br>
+		<a href="#">Forgot password?</a>
+</form>

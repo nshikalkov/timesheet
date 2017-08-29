@@ -1,0 +1,9 @@
+<h1>Add a customer</h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('admin', ['action' => 'add-customer']));
+echo $this->partial('application/admin/formcustomer', [
+    'form' => $form,
+    'submitLabel' => 'Insert new customer',
+]);
