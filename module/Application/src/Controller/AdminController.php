@@ -6,8 +6,6 @@ use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 use Application\Model\AdminDbInterface;
 use Application\Form\CustomerForm;
-use Application\Model\Customer;
-use InvalidArgumentException;
 
 
 class AdminController extends AbstractActionController
@@ -25,9 +23,7 @@ class AdminController extends AbstractActionController
     {
         $container = new Container('auth');
         
-        if (!isset($container->currentUserId)) {
-            $container->currentUserId = 0;
-        } elseif ($container->currentUserId == 0) {
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
             return $this->redirect()->toRoute(
                 'auth',
                 []
@@ -43,9 +39,7 @@ class AdminController extends AbstractActionController
     {
         $container = new Container('auth');
         
-        if (!isset($container->currentUserId)) {
-            $container->currentUserId = 0;
-        } elseif ($container->currentUserId == 0) {
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
             return $this->redirect()->toRoute(
                 'auth',
                 []
@@ -90,9 +84,7 @@ class AdminController extends AbstractActionController
     {
         $container = new Container('auth');
         
-        if (!isset($container->currentUserId)) {
-            $container->currentUserId = 0;
-        } elseif ($container->currentUserId == 0) {
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
             return $this->redirect()->toRoute(
                 'auth',
                 []
@@ -106,7 +98,7 @@ class AdminController extends AbstractActionController
         
         try {
             $customer = $this->adminDb->getCustomer($id, $container->currentUserId);
-        } catch (InvalidArgumentException $ex) {
+        } catch (\Exception $ex) {
             return $this->redirect()->toRoute('admin');
         }
         
@@ -139,9 +131,7 @@ class AdminController extends AbstractActionController
     {
         $container = new Container('auth');
         
-        if (!isset($container->currentUserId)) {
-            $container->currentUserId = 0;
-        } elseif ($container->currentUserId == 0) {
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
             return $this->redirect()->toRoute(
                 'auth',
                 []
@@ -155,7 +145,7 @@ class AdminController extends AbstractActionController
         
         try {
             $customer = $this->adminDb->getCustomer($id, $container->currentUserId);
-        } catch (InvalidArgumentException $ex) {
+        } catch (\Exception $ex) {
             return $this->redirect()->toRoute('admin');
         }
         
@@ -182,9 +172,7 @@ class AdminController extends AbstractActionController
     {
         $container = new Container('auth');
         
-        if (!isset($container->currentUserId)) {
-            $container->currentUserId = 0;
-        } elseif ($container->currentUserId == 0) {
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
             return $this->redirect()->toRoute(
                 'auth',
                 []
@@ -207,9 +195,7 @@ class AdminController extends AbstractActionController
     {
         $container = new Container('auth');
         
-        if (!isset($container->currentUserId)) {
-            $container->currentUserId = 0;
-        } elseif ($container->currentUserId == 0) {
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
             return $this->redirect()->toRoute(
                 'auth',
                 []
