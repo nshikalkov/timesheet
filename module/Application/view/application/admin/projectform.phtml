@@ -28,4 +28,5 @@ echo $this->form()->openTag($form);
 echo $this->formSubmit($submit);
 echo $this->formHidden($fieldset->get('id'));
 echo $this->formHidden($fieldset->get('customerId'));
+echo "<input type='hidden' name='customerId' value='".$this->customerId."'/>";
 echo $this->form()->closeTag();

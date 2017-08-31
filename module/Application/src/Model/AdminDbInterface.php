@@ -9,7 +9,7 @@ interface AdminDbInterface {
     public function updateCustomer(Customer $customer);
     public function deleteCustomer(Customer $customer);
     public function listProjects($customerId, $appUserId, $offset=0, $limit=10);
-    public function getProject($id, $customerId, $appUserId);
+    public function getProject($id, $appUserId);
     public function insertProject(Project $project);
     public function updateProject(Project $project);
     public function deleteProject(Project $project);

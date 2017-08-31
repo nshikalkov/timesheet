@@ -1,0 +1,10 @@
+<h1>Edit project</h1>
+
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url('admin', ['action' => 'edit-project', 'id' => $this->id]));
+echo $this->partial('application/admin/projectform', [
+    'form' => $form,
+    'submitLabel' => 'Update project',
+    'customerId' => $this->customerId,
+]);

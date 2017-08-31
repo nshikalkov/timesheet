@@ -84,11 +84,11 @@ class AdminDbHandler implements AdminDbInterface
         return $customer;
     }
     
-    public function getProject($id, $customerId, $appUserId)
+    public function getProject($id, $appUserId)
     {
         $sql       = new Sql($this->db);
         $select    = $sql->select('project');
-        $select->where(['id = ?' => $id, 'customer_id = ?' => $customerId, 'app_user_id = ?' => $appUserId]);
+        $select->where(['id = ?' => $id, 'app_user_id = ?' => $appUserId]);
         
         $statement = $sql->prepareStatementForSqlObject($select);
         $result    = $statement->execute();
@@ -147,7 +147,29 @@ class AdminDbHandler implements AdminDbInterface
 	}
 
     public function updateProject(Project $project)
-    {}
+    {
+		if (! $project->getId()) {
+            throw new RuntimeException('Cannot update customer; missing identifier');
+        }
+        
+        $update = new Update('project');
+        $update->set([
+            'name' => $project->getName(),
+        ]);
+        $update->where(['id = ?' => $project->getId()]);
+        
+        $sql = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($update);
+        $result = $statement->execute();
+        
+        if (! $result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during customer update operation'
+                );
+        }
+        
+        return $project;
+	}
 
     public function deleteProject(Project $project)
     {}

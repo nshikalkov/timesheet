@@ -250,6 +250,49 @@ class AdminController extends AbstractActionController
     
     public function editProjectAction()
     {
+		$container = new Container('auth');
+        
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
+            return $this->redirect()->toRoute(
+                'auth',
+                []
+                );
+        }
+        
+        $id = $this->params()->fromRoute('id');
+        if (! $id) {
+            return $this->redirect()->toRoute('admin');
+        }
+        
+        try {
+            $project = $this->adminDb->getProject($id, $container->currentUserId);
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('admin');
+        }
+        
+        $this->projectForm->bind($project);
+        $viewModel = new ViewModel(['form' => $this->projectForm, 'id' => $id, 'customerId' => $this->params()->fromQuery('customerId')]);
+        
+        $request = $this->getRequest();
+        if (! $request->isPost()) {
+            return $viewModel;
+        }
+        
+        $this->projectForm->setData($request->getPost());
+        
+        if (! $this->projectForm->isValid()) {
+            return $viewModel;
+        }
+        
+        if ($container->currentUserId != 1) {
+            $project = $this->adminDb->updateProject($project);
+        }
+        
+        
+        return $this->redirect()->toRoute(
+             'admin',
+             ['action'=>'listProjects', 'id'=>$request->getPost()['customerId']]
+             );
     }
     
     public function deleteProjectAction()
