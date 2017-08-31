@@ -18,15 +18,18 @@ class AdminDbHandler implements AdminDbInterface
     private $db;
     private $hydrator;
     private $customerPrototype;
+    private $projectPrototype;
     
     public function __construct(
         AdapterInterface $db,
         HydratorInterface $hydrator,
-        Customer $customerPrototype
+        Customer $customerPrototype, 
+        Project $projectPrototype
         ) {
             $this->db            = $db;
             $this->hydrator      = $hydrator;
             $this->customerPrototype = $customerPrototype;
+            $this->projectPrototype = $projectPrototype;
     }
 
     public function listCustomers($appUserId, $offset=0, $limit=10)
@@ -112,7 +115,36 @@ class AdminDbHandler implements AdminDbInterface
     }
 
     public function insertProject(Project $project)
-    {}
+    {
+		$insert = new Insert('project');
+        $insert->values([
+            'name' => $project->getName(),
+            'customer_id' => $project->getCustomerId(),
+            'app_user_id' => $project->getAppUserId(),
+            'status' => $project->getStatus(),
+        ]);
+        
+        $sql = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($insert);
+        $result = $statement->execute();
+        
+        if (! $result instanceof ResultInterface) {
+            throw new RuntimeException(
+                'Database error occurred during customer insert operation'
+                );
+        }
+        
+        $id = $result->getGeneratedValue();
+        
+        $result = new Project(
+            $project->getName(),
+            $result->getGeneratedValue()
+            );
+            
+        $result->setCustomerId($project->getCustomerId());
+        
+        return $result;
+	}
 
     public function updateProject(Project $project)
     {}
@@ -207,7 +239,7 @@ class AdminDbHandler implements AdminDbInterface
             return [];
         }
         
-        $resultSet = new HydratingResultSet($this->hydrator,new Project(''));
+        $resultSet = new HydratingResultSet($this->hydrator,$this->projectPrototype);
         $resultSet->initialize($result);
         return $resultSet;
     }

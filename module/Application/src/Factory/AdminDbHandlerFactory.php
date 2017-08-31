@@ -7,6 +7,7 @@ use Zend\Db\Adapter\AdapterInterface;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\Hydrator\Reflection as ReflectionHydrator;
 use Application\Model\Customer;
+use Application\Model\Project;
 
 
 class AdminDbHandlerFactory implements FactoryInterface 
@@ -16,7 +17,8 @@ class AdminDbHandlerFactory implements FactoryInterface
         return new AdminDbHandler(
             $container->get(AdapterInterface::class),
             new ReflectionHydrator(),
-            new Customer('')
+            new Customer(''),
+            new Project('')
             );
     }
 }

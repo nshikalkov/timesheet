@@ -6,17 +6,20 @@ use Zend\Session\Container;
 use Zend\View\Model\ViewModel;
 use Application\Model\AdminDbInterface;
 use Application\Form\CustomerForm;
+use Application\Form\ProjectForm;
 
 
 class AdminController extends AbstractActionController
 {
     private $adminDb;
     private $customerForm;
+    private $projectForm;
     
-    public function __construct(AdminDbInterface $adminDb, CustomerForm $customerForm)
+    public function __construct(AdminDbInterface $adminDb, CustomerForm $customerForm, ProjectForm $projectForm)
     {
         $this->adminDb = $adminDb;
         $this->customerForm = $customerForm;
+        $this->projectForm = $projectForm;
     }
     
     public function indexAction()
@@ -203,38 +206,46 @@ class AdminController extends AbstractActionController
         }
         
         $request   = $this->getRequest();
-        $viewModel = new ViewModel(['form' => $this->customerForm]);
+        
+        $id = $this->params()->fromRoute('id');
+        if (! $id) {
+            return $this->redirect()->toRoute('admin');
+        }
+        
+        $viewModel = new ViewModel(['form' => $this->projectForm, 'customerId' => $id]);
         
         if (! $request->isPost()) {
             return $viewModel;
         }
         
-//         $this->customerForm->setData($request->getPost());
         
-//         if (! $this->customerForm->isValid()) {
-//             return $viewModel;
-//         }
         
-//         $customer = $this->customerForm->getData();
+         $this->projectForm->setData($request->getPost());
         
-//         $customer->setAppUserId($container->currentUserId);
-//         $customer->setStatus('active');
+         if (! $this->projectForm->isValid()) {
+             return $viewModel;
+         }
         
-//         if ($container->currentUserId != 1) {
-//             try {
-//                 $customer = $this->adminDb->insertCustomer($customer);
-//             } catch (\Exception $ex) {
-//                 // An exception occurred; we may want to log this later and/or
-//                 // report it to the user. For now, we'll just re-throw.
-//                 throw $ex;
-//             }
-//         }
+         $project = $this->projectForm->getData();
         
-//         return $this->redirect()->toRoute(
-//             'admin',
-//             ['action'=>'listProjects', 'id'=>$project->getCustomerId()]
-//             );
-        return [];
+         $project->setCustomerId($id);
+         $project->setAppUserId($container->currentUserId);
+         $project->setStatus('active');
+        
+         if ($container->currentUserId != 1) {
+             try {
+                 $project = $this->adminDb->insertProject($project);
+             } catch (\Exception $ex) {
+                 // An exception occurred; we may want to log this later and/or
+                 // report it to the user. For now, we'll just re-throw.
+                 throw $ex;
+             }
+         }
+        
+         return $this->redirect()->toRoute(
+             'admin',
+             ['action'=>'listProjects', 'id'=>$project->getCustomerId()]
+             );
     }
     
     public function editProjectAction()
