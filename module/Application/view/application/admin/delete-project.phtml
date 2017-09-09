@@ -1,0 +1,14 @@
+<h1>Delete post</h1>
+
+<p>Are you sure you want to delete the following project?</p>
+
+<ul class="list-group">
+    <li class="list-group-item"><?= $this->escapeHtml($this->project->getName()) ?></li>
+</ul>
+
+<form action="<?=$this->url('admin', ['action' => 'delete-project', 'id' => $this->project->getId()])?>" method="post">
+    <input type="hidden" name="id" value="<?= $this->escapeHtmlAttr($this->project->getId()) ?>" />
+    <input type="hidden" name="customerId" value="<?= $this->escapeHtmlAttr($this->customerId) ?>" />
+    <input class="btn btn-default" type="submit" name="confirm" value="Cancel" />
+    <input class="btn btn-danger" type="submit" name="confirm" value="Delete" />
+</form>

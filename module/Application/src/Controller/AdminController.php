@@ -187,9 +187,14 @@ class AdminController extends AbstractActionController
             return $this->redirect()->toRoute('admin');
         }
         
+        $customer = $this->adminDb->getCustomer($id,$container->currentUserId);
+        if (!$customer) {
+            return $this->redirect()->toRoute('admin');
+        }
+        
         return new ViewModel([
             'projects' => $this->adminDb->listProjects($id,$container->currentUserId),
-            'customerName' => 'Test 123',
+            'customerName' => $customer->getName(),
             'customerId' => $id,
         ]);
     }
@@ -244,7 +249,7 @@ class AdminController extends AbstractActionController
         
          return $this->redirect()->toRoute(
              'admin',
-             ['action'=>'listProjects', 'id'=>$project->getCustomerId()]
+             ['action'=>'list-projects', 'id'=>$project->getCustomerId()]
              );
     }
     
@@ -297,5 +302,45 @@ class AdminController extends AbstractActionController
     
     public function deleteProjectAction()
     {
+        $container = new Container('auth');
+        
+        if (!isset($container->currentUserId) || $container->currentUserId == 0) {
+            return $this->redirect()->toRoute(
+                'auth',
+                []
+                );
+        }
+        
+        $id = $this->params()->fromRoute('id');
+        if (! $id) {
+            return $this->redirect()->toRoute('admin');
+        }
+        
+        try {
+            $project = $this->adminDb->getProject($id, $container->currentUserId);
+        } catch (\Exception $ex) {
+            return $this->redirect()->toRoute('admin');
+        }
+        
+        $request = $this->getRequest();
+        if (! $request->isPost()) {
+            return new ViewModel(['project' => $project, 'customerId' => $this->params()->fromQuery('customerId')]);
+        }
+        
+        if ($id != $request->getPost('id')
+            || 'Delete' !== $request->getPost('confirm', 'no')
+            ) 
+        {
+            return $this->redirect()->toRoute('admin');
+        }
+            
+        if ($container->currentUserId != 1) {
+            $project = $this->adminDb->deleteProject($project);
+        }        
+        
+        return $this->redirect()->toRoute(
+             'admin',
+             ['action'=>'list-projects', 'id'=>$request->getPost()['customerId']]
+             );
     }
 }

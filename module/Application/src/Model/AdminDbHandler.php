@@ -172,7 +172,24 @@ class AdminDbHandler implements AdminDbInterface
 	}
 
     public function deleteProject(Project $project)
-    {}
+    {
+        if (! $project->getId()) {
+            throw new RuntimeException('Cannot update project; missing identifier');
+        }
+        
+        $delete = new Delete('project');
+        $delete->where(['id = ?' => $project->getId()]);
+        
+        $sql = new Sql($this->db);
+        $statement = $sql->prepareStatementForSqlObject($delete);
+        $result = $statement->execute();
+        
+        if (! $result instanceof ResultInterface) {
+            return false;
+        }
+        
+        return true;        
+    }
 
     public function updateCustomer(Customer $customer)
     {
